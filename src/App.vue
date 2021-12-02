@@ -30,6 +30,14 @@
     </b-collapse>
   </b-navbar>
 </div>
+<div>
+ <img
+              src="https://i.ibb.co/WWNpHYF/hotel-3.jpg"
+              class="card-img-top"
+              alt="..."
+            />
+
+</div>
 <HelloWorld/>
   
   </div>
