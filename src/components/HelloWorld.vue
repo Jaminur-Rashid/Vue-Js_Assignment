@@ -14,47 +14,49 @@
         </b-card>
       </div>
       <b-card-group>
-        <b-card class="input-card">
+        <b-card class="input-card" style="">
           <!--
             Check
           -->
-          <div>
-            <h6>Guest</h6>
-            <b-button v-b-modal.modal-prevent-closing>Options</b-button>
+          <div v-b-modal.modal-prevent-closing>
+            <h6>Leaving from</h6>
+            <p style="font-weight:bold;">{{leavingFrom}}</p>
+            <h6>Going To</h6>
+            <p style="font-weight:bold;">{{goingTo}}</p>
+           <!-- <b-button v-b-modal.modal-prevent-closing variant="success">Options</b-button>-->
 
             <div class="mt-3"></div>
 
             <b-modal
               id="modal-prevent-closing"
               ref="modal"
-              title="Select Cabin class and Number of passenger"
+              title="Select City"
               @show="resetModal"
               @hidden="resetModal"
               @ok="handleOk"
             >
               <div>
-                <p>Adult : {{ adult }}</p>
-                <button @click="addOne">+</button>
-                <button @click="minusOne">-</button>
-                <span>Adult</span>
+               <div>
+            <h6>Leaving From </h6>
+            <b-form-input
+              class="input-field"
+              v-model="leavingFrom"
+              placeholder="Dhaka, Bangladesh"
+            ></b-form-input>
+            <div class="mt-2">{{ leavingFrom }}</div>
+            <div>
+            <h6>Going To</h6>
+            <b-form-input
+              class="input-field"
+              v-model="goingTo"
+              placeholder="Kalkata, India"
+            ></b-form-input>
+            <div class="mt-2">{{ goingTo }}</div>
+          </div>
+          </div>
               </div>
 
               <form ref="form" @submit.stop.prevent="handleSubmit">
-                <!--
-        <b-form-group
-          label="Name"
-          label-for="name-input"
-          invalid-feedback="Name is required"
-          :state="nameState"
-        >
-          <b-form-input
-            id="name-input"
-            v-model="name"
-            :state="nameState"
-            required
-          ></b-form-input>
-        </b-form-group>
-        -->
               </form>
             </b-modal>
           </div>
@@ -81,13 +83,14 @@
                 v-model="departuringOn"
                 :date-format-options="{  month: 'short',year: 'numeric', day: 'numeric' }"
                 class="mb-2"
-                style="border:none"
+                style="border:none;"
+                placeholder="Select date"
               ></b-form-datepicker>
             </div>
             <div class="mt-2" v-if="departuringOn">{{departuringOn}}</div>
           </div>
         </b-card>
-
+<!--
         <b-card class="input-card">
           <div>
             <h6>Leaving From </h6>
@@ -99,6 +102,7 @@
             <div class="mt-2">{{ leavingFrom }}</div>
           </div>
         </b-card>
+        -->
         <b-card  class="input-card">
           <div>
             <h6>Going To</h6>
@@ -128,7 +132,7 @@ export default {
       month : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"],
       msg: "Ready for next trip.? Book with us",
       goingTo: "Dhaka, Bangladesh",
-      leavingFrom: "",
+      leavingFrom: "khulna",
       departuringOn: "",
       returningOn: "",
       adult: 0,
@@ -139,24 +143,7 @@ export default {
     };
   },
   methods: {
-    /*
-     Methods to increase passenger
-     */
-    addOne: function() {
-      let totPass = this.adult;
-      if (totPass <= 10) {
-        this.adult = totPass + 1;
-      }
-    },
-    /*
-     Methods to decrese passenger
-     */
-    minusOne: function() {
-      let totPass = this.adult;
-      if (totPass > 0) {
-        this.adult = totPass - 1;
-      }
-    },
+   
     checkFormValidity() {
       const valid = this.$refs.form.checkValidity();
       this.nameState = valid;
@@ -204,10 +191,11 @@ export default {
   margin: 10px 10px 5px 10px;
   /*font-family: 'Roboto', sans-serif;*/
   /*border: 1px solid black;*/
-  border-left: 3px solid teal;
+  border-left: 3px solid#055636;
+  border-radius: 10px;
 }
 .input-field {
-  border: none;
+  /*border: none;*/
 }
 .card-container .center {
   display: flex;
@@ -216,12 +204,24 @@ export default {
   height: 100px;
   /*border: 3px solid ; */
 }
+/*
+style search button
+*/
 .card-container .center button {
-  background-color: turquoise;
   height: 40px;
   width: 100px;
   border: none;
   color: white;
+  background-color: #04AA6D;
+  border-radius: 10px;
+}
+.card-container .center button:hover {
+  height: 40px;
+  width: 100px;
+  border: 1px solid #04AA6D;
+  color: #04AA6D;
+  background-color:white;
+  border-radius: 10px;
 }
 @media only screen and (max-width: 1200px) {
   .input-card {

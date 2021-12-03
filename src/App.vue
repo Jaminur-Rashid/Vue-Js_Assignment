@@ -32,7 +32,8 @@
 </div>
 <SlideShow/>
 <HelloWorld/>
-  
+<AvailableFlight />
+<Footer/>
   </div>
   
 </template>
@@ -41,12 +42,16 @@
 import HelloWorld from './components/HelloWorld'
 import Navbar from './components/Heading'
 import SlideShow from './components/SlideShow.vue'
+import Footer from './components/Footer.vue'
+import AvailableFlight from './components/AvailableFlight.vue'
 
 export default {
   name: 'App',
   components: {
     HelloWorld,
     SlideShow,
+    Footer,
+    AvailableFlight
   }
 }
 </script>
@@ -71,7 +76,8 @@ export default {
 }
 .top-navbar .nav-link{
   margin-left: 10px;
-  color:purple
+  color:purple;
+  float:right;
 
 }
 .top-navbar{
