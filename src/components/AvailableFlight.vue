@@ -9,6 +9,7 @@
     <b-card-group class="card-grp">
       <b-card class="flight">
         <b-table
+          v-if="items"
           striped
           hover
           :items="items.slice(1, 5)"
@@ -18,30 +19,14 @@
 
       <b-card class="flight">
         <b-card-text>
-          <!--
-         <div>
-    <ul v-if="posts && posts.length">
-      <li v-for="post of posts.slice(1,5)" :key="post.title">
-        <p><strong>{{post.title}}</strong></p>
-        <p>{{post.body}}</p>
-      </li>
-    </ul>
-    <p v-if="!posts">
-      ...Loading...
-     </p>
-    <ul v-if="errors && errors.length">
-      <li v-for="error of errors" :key="error.message">
-        {{error.message}}
-      </li>
-    </ul>
-  </div>
-  -->
-        </b-card-text>
-      </b-card>
-      <b-card class="flight">
-        <b-card-text>
-          <p>Reboot and Refund</p>
-          <font-awesome-icon style="font-size:28px;" icon="user-secret" />
+          <ul v-if="flightData && flightData.length">
+            <li v-for="flight of flightData">
+              <p>
+                <strong>{{ flight.arivalTime }}</strong>
+              </p>
+              <p>{{ flight.departureTime }}</p>
+            </li>
+          </ul>
         </b-card-text>
       </b-card>
     </b-card-group>
@@ -128,6 +113,71 @@ export default {
         response = JSON.stringify(response);
         //const d=response.data.response.flights[0].flight[1].originName;
         response = JSON.parse(response);
+        /*
+        const originCity="s";
+        const destinationCity
+        const originCode
+        const destinationCode;
+        const arivalTime;
+        const departureTime;
+        const durationTime;
+
+        /*
+            flightsArr[i].flight[i].originName.city &&
+            flightsArr[i].flight[i].destinationName.city &&
+            flightsArr[i].flight[i].originName.code &&
+            flightsArr[i].flight[i].destinationName.code &&
+            flightsArr[i].flight[i].arrivalDateTime.time &&
+            flightsArr[i].flight[i].duration
+        */
+        let counterValue = 0;
+        let allFlightsData = [];
+        const flightsLength = response.data.response.flights.length;
+        //let flightsArr = response.data.response.flights[0];
+        for (let i = 0; i < flightsLength; i++) {
+          console.log("It works"+response.data.response.flights[0].flight[0].originName.city );
+          //console.log(typeof(flightsArr[i].flight[i].destinationName.city))
+            const originCity = response.data.response.flights[0].flight[0].originName.city;
+            const destinationCity =
+             response.data.response.flights[0].flight[0].destinationName.city;
+            const originCode = response.data.response.flights[0].flight[0].originName.code;
+            const destinationCode =
+              response.data.response.flights[0].flight[0].destinationName.code;
+            const arivalTime = response.data.response.flights[0].flight[0].arrivalDateTime.time;
+            const departureTime =
+              response.data.response.flights[0].flight[0].departureDateTime.time;
+            const durationTime = response.data.response.flights[0].flight[0].duration;
+
+            const eachFlight = {
+              originCity: originCity,
+              destinationCity: destinationCity,
+              originCode: originCode,
+              destinationCode: destinationCode,
+              arivalTime: arivalTime,
+              departureTime: departureTime
+            };
+            allFlightsData.push(eachFlight);
+
+          console.log(
+            "data is : " +
+              originCity +
+              " destination name : " +
+              destinationCity +
+              " origin code : " +
+              originCode +
+              " destination Code : " +
+              destinationCode +
+              " Arrival time is : " +
+              arivalTime +
+              " departure time : " +
+              departureTime +
+              " Duration : " +
+              durationTime
+          );
+          counterValue++;
+        }
+        console.log("# Debug Conter value : " + counterValue);
+        /*
         const originCity =
           response.data.response.flights[0].flight[0].originName.city;
         const destinationCity =
@@ -142,42 +192,32 @@ export default {
           response.data.response.flights[0].flight[0].departureDateTime.time;
         const durationTime =
           response.data.response.flights[0].flight[0].duration;
-        console.log(
-          "data is : " +
-            originCity +
-            " destination name : " +
-            destinationCity +
-            " origin code : " +
-            originCode +
-            " destination Code : " +
-            destinationCode +
-            " Arrival time is : " +
-            arivalTime +
-            " departure time : " +
-            departureTime+
-            " Duration : "+durationTime
-        );
-        const eachFlight={
-          originCity:originCity,
-          destinationCity:destinationCity,
-          originCode :originCode,
-          destinationCode:destinationCode,
-          arivalTime:arivalTime,
-          departureTime:departureTime,
+          */
 
-
-        };
-    
-        console.log("Flight one info is : "+eachFlight)
-        //response=JSON.parse(response)
-        //console.log("D is : "+d)
-
-        //console.log("Data is  : ")
+        //console.log("Flight one info is : "+allFlightsData[0].originCity)
+        for (let i = 0; i < flightsLength; i++) {
+          console.log(
+            " Flight " +
+              i +
+              " Info is " +
+              " origin " +
+              allFlightsData[i].originCity +
+              " destination city " +
+              allFlightsData[i].destinationCity +
+              " origin code " +
+              allFlightsData[i].originCode +
+              " destination code " +
+              allFlightsData[i].destinationCode +
+              " Arrival time " +
+              allFlightsData[i].arivalTime
+          );
+        }
+        this.flightData = allFlightsData;
       })
       .catch(e => {
         this.errors.push(e);
       });
-    this.post = this.post.slice(1, 10);
+    //this.post = this.post.slice(1, 10);
   }
 };
 </script>
