@@ -1,6 +1,6 @@
 <template>
   <div class="card-container">
-  <div style="height:30px;width:100%;font-weight:700;background-color: #d9d9d9"> {{msg}}</div>
+  <!--<div style="height:30px;width:100%;font-weight:700;background-color: #d9d9d9"> {{msg}}</div>-->
     <div>
       <div>
         <b-card body-class="text-center" header-tag="nav">

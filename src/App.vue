@@ -30,14 +30,7 @@
     </b-collapse>
   </b-navbar>
 </div>
-<div>
- <img
-              src="https://i.ibb.co/WWNpHYF/hotel-3.jpg"
-              class="card-img-top"
-              alt="..."
-            />
-
-</div>
+<SlideShow/>
 <HelloWorld/>
   
   </div>
@@ -47,11 +40,13 @@
 <script>
 import HelloWorld from './components/HelloWorld'
 import Navbar from './components/Heading'
+import SlideShow from './components/SlideShow.vue'
 
 export default {
   name: 'App',
   components: {
     HelloWorld,
+    SlideShow,
   }
 }
 </script>
@@ -74,8 +69,9 @@ export default {
   color:red;
   font-weight: 900;
 }
-#app .top-navbar .nav-link{
+.top-navbar .nav-link{
   margin-left: 10px;
+  color:purple
 
 }
 .top-navbar{
