@@ -1,14 +1,18 @@
 <template>
   <div class="flight-container">
     <b-nav tabs>
-      <b-nav-item active>Available Flight</b-nav-item>
-      <b-nav-item>Filter By Price</b-nav-item>
-      <b-nav-item>Filter By Time</b-nav-item>
+      <b-nav-item active >Available Flight</b-nav-item>
+      <b-nav-item v-if="flightData!==undefined"  v-on:click="sortUsingPrice">Filter By Price</b-nav-item>
+      <b-nav-item v-on:click="sortUsingTime">Filter By Time</b-nav-item>
     </b-nav>
 
      <div>
       <p v-if="!flightData">...Loading</p>
-         <b-table v-if="flightData!==undefined" striped hover :items="flightData"></b-table>
+      <p v-if="!flightData">...Loading</p>
+          <b-card>  <b-table v-if="flightData!==undefined && sortByPrice===false && sortByTime===false" striped hover :items="flightData"></b-table></b-card>
+          <b-table v-if="flightData!==undefined && sortByPrice===false && sortByTime===false" striped hover :items="flightData"></b-table>
+         <b-table v-if="flightData!==undefined && sortByPrice===true" striped hover :items="flightData"></b-table>
+          <b-table v-if="flightData!==undefined && sortByTime===true" striped hover :items="flightData"></b-table>
      </div>
       
       <!--
@@ -61,6 +65,8 @@ export default {
     return {
       isOk:0,
       flightData: [],
+      sortByTime:false,
+      sortByPrice:false,
       posts: [],
       errors: [],
       items: [
@@ -75,6 +81,22 @@ export default {
         { isActive: true, age: 38, first_name: "Jami", last_name: "Carney" }
       ]
     };
+  },
+  methods:{
+    sortUsingPrice:function(){
+      this.sortByTime=false;
+      alert("flightDta");
+      this.flightData.sort(function(a, b){return a.price - b.price});
+        this.sortByPrice=true;
+    },
+    sortUsingTime:function(){
+      this.sortByPrice=false;
+      alert("flightDta");
+     this.flightData.sort(function (a, b) {
+    return a.arivalTime.localeCompare(b.arivalTime);
+});
+        this.sortByTime=true;
+    }
   },
   /*
   fetch data from api
@@ -213,7 +235,11 @@ export default {
               " origin airport : "+allFlightsData[i].originAirport+" destination airport : "+allFlightsData[i].destinationAirport+" Price : "+allFlightsData[i].price
           );
         }
-        allFlightsData.sort(function(a, b){return a.price - b.price});
+        //allFlightsData.sort(function(a, b){return a.price - b.price});
+      /*allFlightsData.sort(function (a, b) {
+    return a.arivalTime.localeCompare(b.arivalTime);
+
+});*/
         this.flightData = allFlightsData;
         this.isOk=1;
         console.log(this.flightData)
