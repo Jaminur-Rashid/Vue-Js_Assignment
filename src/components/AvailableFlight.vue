@@ -88,19 +88,6 @@ export default {
   */
   created() {
     /*
-    axios.get(`http://jsonplaceholder.typicode.com/posts`)
-    .then(response => {
-      // JSON responses are automatically parsed.
-      this.posts = response.data
-    })
-    .catch(e => {
-      this.errors.push(e)
-    })
-    this.post=this.post.slice(1,10)
-    
-  }
-  */
-    /*
   fetch flight data
   */
     axios
@@ -111,6 +98,7 @@ export default {
         // JSON responses are automatically parsed.
         //this.posts = response.data;
         response = JSON.stringify(response);
+        console.log(response);
         //const d=response.data.response.flights[0].flight[1].originName;
         response = JSON.parse(response);
         /*
@@ -133,21 +121,27 @@ export default {
         let counterValue = 0;
         let allFlightsData = [];
         const flightsLength = response.data.response.flights.length;
-        //let flightsArr = response.data.response.flights[0];
-        for (let i = 0; i < flightsLength; i++) {
-          console.log("It works"+response.data.response.flights[0].flight[0].originName.city );
-          //console.log(typeof(flightsArr[i].flight[i].destinationName.city))
-            const originCity = response.data.response.flights[0].flight[0].originName.city;
+        console.log("Total Flights : " + flightsLength);
+        try {
+          for (let i = 0; i < flightsLength; i++) {
+            // console.log("It works"+response.data.response.flights[1].flight[i].originName.city );
+            //console.log(typeof(flightsArr[i].flight[i].destinationName.city))
+            const originCity =
+              response.data.response.flights[i].flight[0].originName.city;
             const destinationCity =
-             response.data.response.flights[0].flight[0].destinationName.city;
-            const originCode = response.data.response.flights[0].flight[0].originName.code;
+              response.data.response.flights[i].flight[0].destinationName.city;
+            const originCode =
+              response.data.response.flights[i].flight[0].originName.code;
             const destinationCode =
-              response.data.response.flights[0].flight[0].destinationName.code;
-            const arivalTime = response.data.response.flights[0].flight[0].arrivalDateTime.time;
+              response.data.response.flights[i].flight[0].destinationName.code;
+            const arivalTime =
+              response.data.response.flights[i].flight[0].arrivalDateTime.time;
             const departureTime =
-              response.data.response.flights[0].flight[0].departureDateTime.time;
-            const durationTime = response.data.response.flights[0].flight[0].duration;
-
+              response.data.response.flights[i].flight[0].departureDateTime
+                .time;
+            const durationTime =
+              response.data.response.flights[i].flight[0].duration;
+            console.log("data slicing done");
             const eachFlight = {
               originCity: originCity,
               destinationCity: destinationCity,
@@ -156,25 +150,32 @@ export default {
               arivalTime: arivalTime,
               departureTime: departureTime
             };
+            console.log("Creating flight object is done");
             allFlightsData.push(eachFlight);
+            console.log("Pushing data is done");
 
-          console.log(
-            "data is : " +
-              originCity +
-              " destination name : " +
-              destinationCity +
-              " origin code : " +
-              originCode +
-              " destination Code : " +
-              destinationCode +
-              " Arrival time is : " +
-              arivalTime +
-              " departure time : " +
-              departureTime +
-              " Duration : " +
-              durationTime
-          );
-          counterValue++;
+            console.log(
+              "data is : " +
+                originCity +
+                " destination name : " +
+                destinationCity +
+                " origin code : " +
+                originCode +
+                " destination Code : " +
+                destinationCode +
+                " Arrival time is : " +
+                arivalTime +
+                " departure time : " +
+                departureTime +
+                " Duration : " +
+                durationTime
+            );
+
+            console.log("Origin name is : " + originCity);
+            counterValue++;
+          }
+        } catch (error) {
+          console.log("Error" + error.message);
         }
         console.log("# Debug Conter value : " + counterValue);
         /*
