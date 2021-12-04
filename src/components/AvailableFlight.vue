@@ -1,31 +1,52 @@
 <template>
   <div class="flight-container">
     <b-nav tabs>
-      <b-nav-item active >Available Flight</b-nav-item>
-      <b-nav-item v-if="flightData!==undefined"  v-on:click="sortUsingPrice">Filter By Price</b-nav-item>
+      <b-nav-item active>Available Flight</b-nav-item>
+      <b-nav-item v-if="flightData !== undefined" v-on:click="sortUsingPrice"
+        >Filter By Price</b-nav-item
+      >
       <b-nav-item v-on:click="sortUsingTime">Filter By Time</b-nav-item>
     </b-nav>
 
-     <div>
+    <div>
       <p v-if="!flightData">...Loading</p>
       <p v-if="!flightData">...Loading</p>
-          <b-card>  <b-table v-if="flightData!==undefined && sortByPrice===false && sortByTime===false" striped hover :items="flightData"></b-table></b-card>
-          <b-table v-if="flightData!==undefined && sortByPrice===false && sortByTime===false" striped hover :items="flightData"></b-table>
-         <b-table v-if="flightData!==undefined && sortByPrice===true" striped hover :items="flightData"></b-table>
-          <b-table v-if="flightData!==undefined && sortByTime===true" striped hover :items="flightData"></b-table>
-     </div>
-      
-      <!--
-      <b-card class="flight">
+      <b-card>
         <b-table
-          v-if="items"
+          v-if="
+            flightData !== undefined &&
+              sortByPrice === false &&
+              sortByTime === false
+          "
           striped
           hover
-          :items="items.slice(1, 5)"
-          :fields="fields"
-        ></b-table>
-      </b-card>
-      -->
+          :items="flightData"
+        ></b-table
+      ></b-card>
+      <b-table
+        v-if="
+          flightData !== undefined &&
+            sortByPrice === false &&
+            sortByTime === false
+        "
+        striped
+        hover
+        :items="flightData"
+      ></b-table>
+      <b-table
+        v-if="flightData !== undefined && sortByPrice === true"
+        striped
+        hover
+        :items="flightData"
+      ></b-table>
+      <b-table
+        v-if="flightData !== undefined && sortByTime === true"
+        striped
+        hover
+        :items="flightData"
+      ></b-table>
+    </div>
+
     <b-card-group>
       <b-card class="f-card">
         <b-card-text>
@@ -63,10 +84,10 @@ export default {
   name: "Flight",
   data() {
     return {
-      isOk:0,
+      isOk: 0,
       flightData: [],
-      sortByTime:false,
-      sortByPrice:false,
+      sortByTime: false,
+      sortByPrice: false,
       posts: [],
       errors: [],
       items: [
@@ -82,29 +103,34 @@ export default {
       ]
     };
   },
-  methods:{
-    sortUsingPrice:function(){
-      this.sortByTime=false;
+  methods: {
+    /*
+  Method to sort flight by price
+  */
+    sortUsingPrice: function() {
+      this.sortByTime = false;
       alert("flightDta");
-      this.flightData.sort(function(a, b){return a.price - b.price});
-        this.sortByPrice=true;
+      this.flightData.sort(function(a, b) {
+        return a.price - b.price;
+      });
+      this.sortByPrice = true;
     },
-    sortUsingTime:function(){
-      this.sortByPrice=false;
+    /*
+    method to sort flight using time 
+    */
+    sortUsingTime: function() {
+      this.sortByPrice = false;
       alert("flightDta");
-     this.flightData.sort(function (a, b) {
-    return a.arivalTime.localeCompare(b.arivalTime);
-});
-        this.sortByTime=true;
+      this.flightData.sort(function(a, b) {
+        return a.arivalTime.localeCompare(b.arivalTime);
+      });
+      this.sortByTime = true;
     }
   },
   /*
   fetch data from api
   */
   created() {
-    /*
-  fetch flight data
-  */
     axios
       .get(
         `https://api.sharetrip.net/api/v1/flight/search?tripType=Return&adult=1&child=0&infant=0&class=Economy&origin=DAC&destination=DXB&depart=2021-12-25&depart=2021-12-30`
@@ -116,26 +142,20 @@ export default {
         console.log(response);
         //const d=response.data.response.flights[0].flight[1].originName;
         response = JSON.parse(response);
-        /*
-        const originCity="s";
-        const destinationCity
-        const originCode
-        const destinationCode;
-        const arivalTime;
-        const departureTime;
-        const durationTime;
-
-        /*
-            flightsArr[i].flight[i].originName.city &&
-            flightsArr[i].flight[i].destinationName.city &&
-            flightsArr[i].flight[i].originName.code &&
-            flightsArr[i].flight[i].destinationName.code &&
-            flightsArr[i].flight[i].arrivalDateTime.time &&
-            flightsArr[i].flight[i].duration
-        */
         let counterValue = 0;
         let allFlightsData = [];
-        let flightPrices=[9876,2342,1947,10000,45000,5000,3333,7654,12345,6567];
+        let flightPrices = [
+          9876,
+          2342,
+          1947,
+          10000,
+          45000,
+          5000,
+          3333,
+          7654,
+          12345,
+          6567
+        ];
         const flightsLength = response.data.response.flights.length;
         console.log("Total Flights : " + flightsLength);
         try {
@@ -144,12 +164,15 @@ export default {
             //console.log(typeof(flightsArr[i].flight[i].destinationName.city))
             const originCity =
               response.data.response.flights[i].flight[0].originName.city;
-              const originAirport=response.data.response.flights[i].flight[0].originName.airport;
+            const originAirport =
+              response.data.response.flights[i].flight[0].originName.airport;
             const destinationCity =
               response.data.response.flights[i].flight[0].destinationName.city;
             const originCode =
               response.data.response.flights[i].flight[0].originName.code;
-              const destinationAirport=response.data.response.flights[i].flight[0].destinationName.airport;
+            const destinationAirport =
+              response.data.response.flights[i].flight[0].destinationName
+                .airport;
             const destinationCode =
               response.data.response.flights[i].flight[0].destinationName.code;
             const arivalTime =
@@ -167,9 +190,9 @@ export default {
               destinationCode: destinationCode,
               arivalTime: arivalTime,
               departureTime: departureTime,
-              originAirport:originAirport,
-              destinationAirport:destinationAirport,
-              price:flightPrices[i],
+              originAirport: originAirport,
+              destinationAirport: destinationAirport,
+              price: flightPrices[i]
             };
             console.log("Creating flight object is done");
             allFlightsData.push(eachFlight);
@@ -199,23 +222,6 @@ export default {
           console.log("Error" + error.message);
         }
         console.log("# Debug Conter value : " + counterValue);
-        /*
-        const originCity =
-          response.data.response.flights[0].flight[0].originName.city;
-        const destinationCity =
-          response.data.response.flights[0].flight[0].destinationName.city;
-        const originCode =
-          response.data.response.flights[0].flight[0].originName.code;
-        const destinationCode =
-          response.data.response.flights[0].flight[0].destinationName.code;
-        const arivalTime =
-          response.data.response.flights[0].flight[0].arrivalDateTime.time;
-        const departureTime =
-          response.data.response.flights[0].flight[0].departureDateTime.time;
-        const durationTime =
-          response.data.response.flights[0].flight[0].duration;
-          */
-
         //console.log("Flight one info is : "+allFlightsData[0].originCity)
         for (let i = 0; i < flightsLength; i++) {
           console.log(
@@ -231,23 +237,23 @@ export default {
               " destination code " +
               allFlightsData[i].destinationCode +
               " Arrival time " +
-              allFlightsData[i].arivalTime+" Departure time : "+allFlightsData[i].departureTime+
-              " origin airport : "+allFlightsData[i].originAirport+" destination airport : "+allFlightsData[i].destinationAirport+" Price : "+allFlightsData[i].price
+              allFlightsData[i].arivalTime +
+              " Departure time : " +
+              allFlightsData[i].departureTime +
+              " origin airport : " +
+              allFlightsData[i].originAirport +
+              " destination airport : " +
+              allFlightsData[i].destinationAirport +
+              " Price : " +
+              allFlightsData[i].price
           );
         }
-        //allFlightsData.sort(function(a, b){return a.price - b.price});
-      /*allFlightsData.sort(function (a, b) {
-    return a.arivalTime.localeCompare(b.arivalTime);
-
-});*/
         this.flightData = allFlightsData;
-        this.isOk=1;
-        console.log(this.flightData)
+        console.log(this.flightData);
       })
       .catch(e => {
         this.errors.push(e);
       });
-    //this.post = this.post.slice(1, 10);
   }
 };
 </script>
