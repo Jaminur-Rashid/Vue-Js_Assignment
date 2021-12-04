@@ -1,5 +1,18 @@
 <template>
   <div class="flight-container">
+  <div>
+  <li style="list-style-type: none;" v-for="post of flightData" v-if="
+            flightData !== undefined &&
+              sortByPrice === true &&
+              sortByTime === false ">
+  <b-card style="margin:20px 100px 30px 100px;border-left:2px solid pink">
+  <p>{{post.originCity}} {{post.arivalTime}} {{post.destinationCity}} {{post.departureTime}}</p>
+  <p>{{post.originAirport.slice(0,15)+'...'}} Departure Time : {{post.destinationAirport.slice(0,15)+'...'}}</p>
+  <h1>{{post.price}}</h1>
+
+  </b-card>
+  </li>
+</div>
     <b-nav tabs>
       <b-nav-item active>Available Flight</b-nav-item>
       <b-nav-item v-if="flightData !== undefined" v-on:click="sortUsingPrice"
