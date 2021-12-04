@@ -125,6 +125,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "HelloWorld",
   data() {
@@ -158,6 +159,23 @@ export default {
       bvModalEvt.preventDefault();
       // Trigger submit handler
       this.handleSubmit();
+      this.getAirportCode();
+    },
+    getAirportCode:function(){
+      let city="Barcelona"
+      if(1){
+        axios.get(`https://api.sharetrip.net/api/v1/flight/search/airport?name=+city`)
+    .then(response => {
+      // JSON responses are automatically parsed.
+      response=JSON.stringify(response)
+     // res=JSON.parse(res)
+      console.log("Res : "+response)
+      console.log("Airport code : "+response.message);
+    })
+    .catch(e => {
+      this.errors.push(e)
+    })
+      }
     },
     handleSubmit() {
       // Exit when the form isn't valid
@@ -167,6 +185,8 @@ export default {
       // Push the name to submitted names
       this.submittedNames.push(this.name);
       // Hide the modal manually
+      /*
+      */
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing");
       });
