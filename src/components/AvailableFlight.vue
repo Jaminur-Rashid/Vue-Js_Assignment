@@ -1,6 +1,49 @@
 <template>
   <div class="flight-container">
-    <div>
+    <b-nav tabs>
+      <b-nav-item active>Available Flight</b-nav-item>
+      <b-nav-item v-if="flightData !== undefined" v-on:click="sortUsingPrice"
+        >Filter By Price</b-nav-item
+      >
+      <b-nav-item v-on:click="sortUsingTime">Filter By Time</b-nav-item>
+    </b-nav>
+    <div class="flight-table">
+      <li
+        style="list-style-type: none;"
+        v-for="post of flightData"
+        v-if="
+          flightData !== undefined &&
+            sortByPrice === false &&
+            sortByTime === false
+        "
+      >
+        <b-card style="margin:5px 100px 0px 100px;border-left:2px solid pink">
+          <b-row>
+            <b-col style="text-align:center;">
+              <h6>{{ post.arivalTime }}</h6>
+              <p>{{ post.originCode }}</p>
+            </b-col>
+            <b-col style="text-align:center;">
+              <img
+                style="height:20px;width:20px;color:blue;"
+                src="https://i.ibb.co/Xp52K8D/plane-solid.png"
+                alt="plane-solid"
+                border="0"
+              />
+              <p>{{ post.durationTime }}</p>
+            </b-col>
+            <b-col style="text-align:center;">
+              <h6>{{ post.departureTime }}</h6>
+              <p>{{ post.destinationCity }}</p>
+            </b-col>
+            <b-col style="text-align:center;">
+              <h6>{{ post.price }}</h6>
+            </b-col>
+          </b-row>
+        </b-card>
+      </li>
+    </div>
+    <div class="flight-table">
       <li
         style="list-style-type: none;"
         v-for="post of flightData"
@@ -10,30 +53,70 @@
             sortByTime === false
         "
       >
-        <b-card style="margin:20px 100px 30px 100px;border-left:2px solid pink">
-          <p>
-            {{ post.originCity }} {{ post.arivalTime }}
-            {{ post.destinationCity }} {{ post.departureTime }}
-          </p>
-          <p>
-            {{ post.originAirport.slice(0, 15) + "..." }} Departure Time :
-            {{ post.destinationAirport.slice(0, 15) + "..." }}
-          </p>
-          <h1>{{ post.price }}</h1>
+        <b-card style="margin:5px 100px 0px 100px;border-left:2px solid pink">
+          <b-row>
+            <b-col style="text-align:center;">
+              <h6>{{ post.arivalTime }}</h6>
+              <p>{{ post.originCode }}</p>
+            </b-col>
+            <b-col style="text-align:center;">
+              <img
+                style="height:20px;width:20px;color:blue;"
+                src="https://i.ibb.co/Xp52K8D/plane-solid.png"
+                alt="plane-solid"
+                border="0"
+              />
+              <p>{{ post.durationTime }}</p>
+            </b-col>
+            <b-col style="text-align:center;">
+              <h6>{{ post.departureTime }}</h6>
+              <p>{{ post.destinationCity }}</p>
+            </b-col>
+            <b-col style="text-align:center;">
+              <h1>{{ post.price }}</h1>
+            </b-col>
+          </b-row>
         </b-card>
       </li>
     </div>
-    <b-nav tabs>
-      <b-nav-item active>Available Flight</b-nav-item>
-      <b-nav-item v-if="flightData !== undefined" v-on:click="sortUsingPrice"
-        >Filter By Price</b-nav-item
+    <div class="flight-table">
+      <li
+        style="list-style-type: none;"
+        v-for="post of flightData"
+        v-if="
+          flightData !== undefined &&
+            sortByPrice === false &&
+            sortByTime === true
+        "
       >
-      <b-nav-item v-on:click="sortUsingTime">Filter By Time</b-nav-item>
-    </b-nav>
-
+        <b-card style="margin:5px 100px 0px 100px;border-left:2px solid pink">
+          <b-row>
+            <b-col style="text-align:center;">
+              <h6>{{ post.arivalTime }}</h6>
+              <p>{{ post.originCode }}</p>
+            </b-col>
+            <b-col style="text-align:center;">
+              <img
+                style="height:20px;width:20px;color:blue;"
+                src="https://i.ibb.co/Xp52K8D/plane-solid.png"
+                alt="plane-solid"
+                border="0"
+              />
+              <p>{{ post.durationTime }}</p>
+            </b-col>
+            <b-col style="text-align:center;">
+              <h6>{{ post.departureTime }}</h6>
+              <p>{{ post.destinationCity }}</p>
+            </b-col>
+            <b-col style="text-align:center;">
+              <h1>{{ post.price }}</h1>
+            </b-col>
+          </b-row>
+        </b-card>
+      </li>
+    </div>
     <div>
-      <p v-if="!flightData">...Loading</p>
-      <p v-if="!flightData">...Loading</p>
+      <!--
       <b-card>
         <b-table
           v-if="
@@ -46,57 +129,15 @@
           :items="flightData"
         ></b-table
       ></b-card>
-      <b-table
-        v-if="
-          flightData !== undefined &&
-            sortByPrice === false &&
-            sortByTime === false
-        "
-        striped
-        hover
-        :items="flightData"
-      ></b-table>
-      <b-table
-        v-if="flightData !== undefined && sortByPrice === true"
-        striped
-        hover
-        :items="flightData"
-      ></b-table>
+      
       <b-table
         v-if="flightData !== undefined && sortByTime === true"
         striped
         hover
         :items="flightData"
       ></b-table>
+      -->
     </div>
-
-    <b-card-group>
-      <b-card class="f-card">
-        <b-card-text>
-          <p>Manage Booking</p>
-          <font-awesome-icon style="font-size:28px" icon="user-secret" />
-        </b-card-text>
-      </b-card>
-
-      <b-card class="f-card">
-        <b-card-text>
-          <p>Check In</p>
-          <font-awesome-icon style="font-size:28px" icon="user-secret" />
-        </b-card-text>
-      </b-card>
-      <b-card class="f-card">
-        <b-card-text>
-          <p>Reboot and Refund</p>
-          <font-awesome-icon style="font-size:28px;" icon="user-secret" />
-        </b-card-text>
-      </b-card>
-      <b-card class="f-card">
-        <b-card-text>
-          <p>Covid 19 Updates</p>
-          <font-awesome-icon style="font-size:28px" icon="user-secret" />
-        </b-card-text>
-      </b-card>
-    </b-card-group>
   </div>
 </template>
 
@@ -205,6 +246,7 @@ export default {
                 .time;
             const durationTime =
               response.data.response.flights[i].flight[0].duration;
+            const logo = response.data.response.flights[i].flight[0].logo;
             console.log("data slicing done");
             const eachFlight = {
               originCity: originCity,
@@ -215,7 +257,9 @@ export default {
               departureTime: departureTime,
               originAirport: originAirport,
               destinationAirport: destinationAirport,
-              price: flightPrices[i]
+              price: flightPrices[i],
+              durationTime: durationTime,
+              logo: logo
             };
             console.log("Creating flight object is done");
             allFlightsData.push(eachFlight);
@@ -285,7 +329,40 @@ export default {
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Abril+Fatface&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap");
+
 .flight-container .card-grp {
   margin-right: 20px 20px 20px 80px;
+}
+/*
+style flight table
+*/
+.flight-container .flight-table h6 {
+  /*text-align: left;*/
+  font-family: "Rubik Mono One", sans-serif;
+  color: teal;
+  font-size: 12px;
+}
+.flight-container .flight-table p {
+  font-family: "Roboto", sans-serif;
+  color: black;
+  font-size: 10px;
+}
+.flight-container .flight-table h1 {
+  font-family: "Roboto", sans-serif;
+  color: black;
+  font-size: 10px;
+  margin-top: 20px;
+}
+.flight-container .flight-table {
+  background-color: #e6e6e6;
+  font-family: "Rubik Mono One", sans-serif;
+  /*color:teal;**/
+}
+.flight-table .price-btn {
+  background-color: #07457e;
+  color: #ffffff;
+  border: none;
+  width: 80px;
 }
 </style>
