@@ -1,6 +1,6 @@
 <template>
   <div class="card-container">
-  <!--<div style="height:30px;width:100%;font-weight:700;background-color: #d9d9d9"> {{msg}}</div>-->
+    <!--<div style="height:30px;width:100%;font-weight:700;background-color: #d9d9d9"> {{msg}}</div>-->
     <div>
       <div>
         <b-card body-class="text-center" header-tag="nav">
@@ -20,10 +20,10 @@
           -->
           <div v-b-modal.modal-prevent-closing>
             <h6>Leaving from</h6>
-            <p style="font-weight:bold;">{{leavingFrom}}</p>
+            <p style="font-weight:bold;">{{airportCodeOfFrom}}</p>
             <h6>Going To</h6>
-            <p style="font-weight:bold;">{{goingTo}}</p>
-           <!-- <b-button v-b-modal.modal-prevent-closing variant="success">Options</b-button>-->
+            <p style="font-weight:bold;">{{ airportCodeOfTo}}</p>
+            <!-- <b-button v-b-modal.modal-prevent-closing variant="success">Options</b-button>-->
 
             <div class="mt-3"></div>
 
@@ -33,31 +33,32 @@
               title="Select City"
               @show="resetModal"
               @hidden="resetModal"
-              @ok="handleOk"
+              @ok="getAirportCode"
             >
               <div>
-               <div>
-            <h6>Leaving From </h6>
-            <b-form-input
-              class="input-field"
-              v-model="leavingFrom"
-              placeholder="Dhaka, Bangladesh"
-            ></b-form-input>
-            <div class="mt-2">{{ leavingFrom }}</div>
-            <div>
-            <h6>Going To</h6>
-            <b-form-input
-              class="input-field"
-              v-model="goingTo"
-              placeholder="Kalkata, India"
-            ></b-form-input>
-            <div class="mt-2">{{ goingTo }}</div>
-          </div>
-          </div>
+                <div>
+                  <h6>Leaving From</h6>
+                  <b-form-input
+                    class="input-field"
+                    v-model="leavingFrom"
+                    placeholder="Dhaka, Bangladesh"
+                  ></b-form-input>
+                  <div class="mt-2">{{ airportCodeOfFrom}}</div>
+                  <div>
+                    <h6>Going To</h6>
+                    <b-form-input
+                      class="input-field"
+                      v-model="goingTo"
+                      placeholder="Kalkata, India"
+                    ></b-form-input>
+        
+                    <div class="mt-2">{{airportCodeOfTo}}</div>
+                  </div>
+                </div>
               </div>
 
-              <form ref="form" @submit.stop.prevent="handleSubmit">
-              </form>
+              <form ref="form" @submit.stop.prevent="handleSubmit"></form>
+              <b-button v-on:click="getAirportCode">Get code</b-button>
             </b-modal>
           </div>
           <!--Check end-->
@@ -69,9 +70,15 @@
               <b-form-datepicker
                 id="example-datepicker1"
                 v-model="returningOn"
+                :date-format-options="{
+                  month: 'short',
+                  year: 'numeric',
+                  day: 'numeric'
+                }"
                 class="mb-2"
               ></b-form-datepicker>
             </div>
+            <div class="mt-2" v-if="departuringOn">{{returningOn}}</div>
           </div>
         </b-card>
         <b-card class="input-card">
@@ -81,29 +88,21 @@
               <b-form-datepicker
                 id="example-datepicker"
                 v-model="departuringOn"
-                :date-format-options="{  month: 'short',year: 'numeric', day: 'numeric' }"
+                :date-format-options="{
+                  month: 'short',
+                  year: 'numeric',
+                  day: 'numeric'
+                }"
                 class="mb-2"
                 style="border:none;"
                 placeholder="Select date"
               ></b-form-datepicker>
             </div>
-            <div class="mt-2" v-if="departuringOn">{{departuringOn}}</div>
+            <div class="mt-2" v-if="departuringOn">{{ departuringOn }}</div>
           </div>
         </b-card>
-<!--
+
         <b-card class="input-card">
-          <div>
-            <h6>Leaving From </h6>
-            <b-form-input
-              class="input-field"
-              v-model="leavingFrom"
-              placeholder="Dhaka, Bangladesh"
-            ></b-form-input>
-            <div class="mt-2">{{ leavingFrom }}</div>
-          </div>
-        </b-card>
-        -->
-        <b-card  class="input-card">
           <div>
             <h6>Going To</h6>
             <b-form-input
@@ -125,15 +124,32 @@
 </template>
 
 <script>
+
 import axios from "axios";
 export default {
   name: "HelloWorld",
+
   data() {
     return {
-      month : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug", "Sep", "Oct", "Nov", "Dec"],
+      month: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ],
       msg: "Ready for next trip.? Book with us",
+      airportCodeOfFrom:'',
+      airportCodeOfTo:'',
       goingTo: "Dhaka, Bangladesh",
-      leavingFrom: "khulna",
+      leavingFrom: "dubai",
       departuringOn: "",
       returningOn: "",
       adult: 0,
@@ -143,8 +159,8 @@ export default {
       submittedNames: []
     };
   },
+  
   methods: {
-   
     checkFormValidity() {
       const valid = this.$refs.form.checkValidity();
       this.nameState = valid;
@@ -155,27 +171,50 @@ export default {
       this.nameState = null;
     },
     handleOk(bvModalEvt) {
-      // Prevent modal from closing
       bvModalEvt.preventDefault();
-      // Trigger submit handler
       this.handleSubmit();
       this.getAirportCode();
     },
-    getAirportCode:function(){
-      let city="Barcelona"
-      if(1){
-        axios.get(`https://api.sharetrip.net/api/v1/flight/search/airport?name=+city`)
-    .then(response => {
-      // JSON responses are automatically parsed.
-      response=JSON.stringify(response)
-     // res=JSON.parse(res)
-      console.log("Res : "+response)
-      console.log("Airport code : "+response.message);
-    })
-    .catch(e => {
-      this.errors.push(e)
-    })
-      }
+    getAirportCode: function() {
+      let urlString =
+        "https://api.sharetrip.net/api/v1/flight/search/airport?name=";
+      urlString += this.leavingFrom;
+        try {
+          axios
+            .get(urlString)
+            .then(response => {
+              response = JSON.stringify(response);
+              console.log("Res : " + response);
+              response = JSON.parse(response);
+              const airportCode = response.data.response[0].iata;
+              console.log("Airport code : " + airportCode);
+              this.airportCodeOfFrom=airportCode;
+            })
+            .catch(e => {
+              this.errors.push(e);
+            });
+        } catch (error) {
+          console.log(error.message);
+        }
+      urlString= "https://api.sharetrip.net/api/v1/flight/search/airport?name=";
+      urlString+=this.goingTo;
+       try {
+          axios
+            .get(urlString)
+            .then(response => {
+              response = JSON.stringify(response);
+              console.log("Res : " + response);
+              response = JSON.parse(response);
+              const destinationAirportCode = response.data.response[0].iata;
+              console.log("Airport code : " + destinationAirportCode);
+              this.airportCodeOfTo=destinationAirportCode;
+            })
+            .catch(e => {
+              this.errors.push(e);
+            });
+        } catch (error) {
+          console.log(error.message);
+        }
     },
     handleSubmit() {
       // Exit when the form isn't valid
@@ -186,7 +225,7 @@ export default {
       this.submittedNames.push(this.name);
       // Hide the modal manually
       /*
-      */
+       */
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing");
       });
@@ -232,15 +271,15 @@ style search button
   width: 100px;
   border: none;
   color: white;
-  background-color: #04AA6D;
+  background-color: #04aa6d;
   border-radius: 10px;
 }
 .card-container .center button:hover {
   height: 40px;
   width: 100px;
-  border: 1px solid #04AA6D;
-  color: #04AA6D;
-  background-color:white;
+  border: 1px solid #04aa6d;
+  color: #04aa6d;
+  background-color: white;
   border-radius: 10px;
 }
 @media only screen and (max-width: 1200px) {
@@ -249,18 +288,3 @@ style search button
   }
 }
 </style>
-<!--
-          <b-card-text>
-            This is a wider card with supporting text below as a natural lead-in
-            to additional content. This content is a little bit longer.
-          </b-card-text>
-          <template #footer>
-            <div class="input-container">
-              <b-form-input
-                v-model="departuringOn"
-                placeholder="Enter your name"
-              ></b-form-input>
-              <div class="mt-2 input-value" >{{ departuringOn }}</div>
-            </div>
-          </template>
-          -->

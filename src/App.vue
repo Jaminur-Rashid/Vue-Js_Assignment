@@ -31,7 +31,6 @@
   </b-navbar>
 </div>
 <SlideShow/>
-<HelloWorld/>
 <AvailableFlight />
 <Footer/>
   </div>
@@ -48,7 +47,6 @@ import AvailableFlight from './components/AvailableFlight.vue'
 export default {
   name: 'App',
   components: {
-    HelloWorld,
     SlideShow,
     Footer,
     AvailableFlight
