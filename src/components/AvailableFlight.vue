@@ -7,6 +7,7 @@
       >
       <b-nav-item v-on:click="sortUsingTime">Filter By Time</b-nav-item>
     </b-nav>
+   
     <div class="flight-table">
       <li
         style="list-style-type: none;"
@@ -323,6 +324,10 @@ export default {
       });
   }
 };
+/*
+test
+*/
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
