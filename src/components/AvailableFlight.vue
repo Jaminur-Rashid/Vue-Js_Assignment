@@ -17,10 +17,10 @@
             sortByTime === false
         "
       >
-        <b-card style="margin:5px 100px 0px 100px;border-left:2px solid pink">
+        <b-card class="card-class">
           <b-row>
             <b-col style="text-align:center;">
-              <h6>{{ post.arivalTime }}</h6>
+              <h6>{{ post.departureTime }}</h6>
               <p>{{ post.originCode }}</p>
             </b-col>
             <b-col style="text-align:center;">
@@ -33,7 +33,7 @@
               <p>{{ post.durationTime }}</p>
             </b-col>
             <b-col style="text-align:center;">
-              <h6>{{ post.departureTime }}</h6>
+              <h6>{{ post.arivalTime }}</h6>
               <p>{{ post.destinationCity }}</p>
             </b-col>
             <b-col style="text-align:center;">
@@ -53,10 +53,10 @@
             sortByTime === false
         "
       >
-        <b-card style="margin:5px 100px 0px 100px;border-left:2px solid pink">
+        <b-card class="card-class">
           <b-row>
             <b-col style="text-align:center;">
-              <h6>{{ post.arivalTime }}</h6>
+              <h6>{{ post.departureTime }}</h6>
               <p>{{ post.originCode }}</p>
             </b-col>
             <b-col style="text-align:center;">
@@ -69,7 +69,7 @@
               <p>{{ post.durationTime }}</p>
             </b-col>
             <b-col style="text-align:center;">
-              <h6>{{ post.departureTime }}</h6>
+              <h6>{{ post.arivalTime }}</h6>
               <p>{{ post.destinationCity }}</p>
             </b-col>
             <b-col style="text-align:center;">
@@ -89,10 +89,10 @@
             sortByTime === true
         "
       >
-        <b-card style="margin:5px 100px 0px 100px;border-left:2px solid pink">
+        <b-card class="card-class">
           <b-row>
             <b-col style="text-align:center;">
-              <h6>{{ post.arivalTime }}</h6>
+              <h6>{{ post.departureTime }}</h6>
               <p>{{ post.originCode }}</p>
             </b-col>
             <b-col style="text-align:center;">
@@ -105,7 +105,7 @@
               <p>{{ post.durationTime }}</p>
             </b-col>
             <b-col style="text-align:center;">
-              <h6>{{ post.departureTime }}</h6>
+              <h6>{{ post.arivalTime }}</h6>
               <p>{{ post.destinationCity }}</p>
             </b-col>
             <b-col style="text-align:center;">
@@ -364,5 +364,16 @@ style flight table
   color: #ffffff;
   border: none;
   width: 80px;
+}
+.flight-table .card-class {
+  margin: 5px 100px 0px 100px;
+  border-left: 2px solid pink;
+}
+@media only screen and (max-width: 1200px) {
+  /*Big smartphones [426px -> 600px]*/
+  .flight-table .card-class {
+    margin: 5px 10px 0px 10px;
+    border-left: 2px solid pink;
+  }
 }
 </style>
