@@ -13,6 +13,10 @@ This is a flight booking application using Vue js and third party weather and fl
 ## Build Setup
 
 ``` bash
+# update node js
+ npm install -g node
+# Install vue js cli globally
+npm install -g @vue/cli-init
 # install dependencies
 npm install
 
