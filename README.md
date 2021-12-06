@@ -1,4 +1,12 @@
 # flight-vue-assignment
+This is a flight booking application using Vue js and third party weather and flight api.
+
+# Project Features
+* Search availabe flight 
+* Retrived airport code from city name
+* Displayed all available flight
+* Filter available flight by price and araival time
+* Get Wheather forcast of destination city
 
 > A Vue.js project
 

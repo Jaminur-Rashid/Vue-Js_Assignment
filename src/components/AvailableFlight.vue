@@ -493,7 +493,7 @@ export default {
           this.errors.push(e);
         });
       /*
-      fetch weather data
+      fetch weather data 
       */
       if (this.goingTo.length > 0) {
         fetch(
