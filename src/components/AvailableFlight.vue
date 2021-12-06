@@ -115,7 +115,7 @@
         </b-card>
       </b-card-group>
       <div class="center">
-        <button>
+        <button @click="searchFlights()">
           Search
         </button>
       </div>
@@ -131,6 +131,20 @@
     </b-nav>
 
     <div class="flight-table">
+      <b-container class="bv-example" v-if="weatherInCelcious && weatherInFarenheit">
+        <b-row>
+          <b-col>
+             <b-card class="card-class">
+               <p style="text-align:center">{{weatherInCelcious}} C</p>
+              </b-card>
+          </b-col>
+          <b-col>
+             <b-card class="card-class">
+               <p style="text-align:center">{{weatherInFarenheit}} C</p>
+              </b-card>
+          </b-col>
+        </b-row>
+      </b-container>
       <li
         style="list-style-type: none;"
         v-for="post of flightData"
@@ -287,6 +301,8 @@ export default {
       sortByPrice: false,
       posts: [],
       errors: [],
+      weatherInCelcious: "",
+      weatherInFarenheit: "",
       items: [
         {
           isActive: true,
@@ -328,6 +344,174 @@ export default {
       this.$nextTick(() => {
         this.$bvModal.hide("modal-prevent-closing");
       });
+    },
+    searchFlights: function() {
+      alert("It may take some time. Please wait");
+      let flightURL =
+        "https://api.sharetrip.net/api/v1/flight/search?tripType=Return&adult=1&child=0&infant=0&class=Economy&origin=" +
+        this.airportCodeOfFrom +
+        "&destination=" +
+        this.airportCodeOfTo +
+        "&depart=" +
+        this.departuringOn +
+        "&depart=" +
+        this.returningOn;
+      console.log(flightURL);
+
+      axios
+        .get(flightURL)
+        .then(response => {
+          // JSON responses are automatically parsed.
+          //this.posts = response.data;
+          response = JSON.stringify(response);
+          console.log(response);
+          //const d=response.data.response.flights[0].flight[1].originName;
+          response = JSON.parse(response);
+          let counterValue = 0;
+          let allFlightsData = [];
+          let flightPrices = [
+            9876,
+            2342,
+            1947,
+            10000,
+            45000,
+            5000,
+            3333,
+            7654,
+            12345,
+            6567
+          ];
+          const flightsLength = response.data.response.flights.length;
+          console.log("Total Flights : " + flightsLength);
+          try {
+            for (let i = 0; i < flightsLength; i++) {
+              // console.log("It works"+response.data.response.flights[1].flight[i].originName.city );
+              //console.log(typeof(flightsArr[i].flight[i].destinationName.city))
+              const originCity =
+                response.data.response.flights[i].flight[0].originName.city;
+              const originAirport =
+                response.data.response.flights[i].flight[0].originName.airport;
+              const destinationCity =
+                response.data.response.flights[i].flight[0].destinationName
+                  .city;
+              const originCode =
+                response.data.response.flights[i].flight[0].originName.code;
+              const destinationAirport =
+                response.data.response.flights[i].flight[0].destinationName
+                  .airport;
+              const destinationCode =
+                response.data.response.flights[i].flight[0].destinationName
+                  .code;
+              const arivalTime =
+                response.data.response.flights[i].flight[0].arrivalDateTime
+                  .time;
+              const departureTime =
+                response.data.response.flights[i].flight[0].departureDateTime
+                  .time;
+              const durationTime =
+                response.data.response.flights[i].flight[0].duration;
+              const logo = response.data.response.flights[i].flight[0].logo;
+              console.log("data slicing done");
+              const eachFlight = {
+                originCity: originCity,
+                destinationCity: destinationCity,
+                originCode: originCode,
+                destinationCode: destinationCode,
+                arivalTime: arivalTime,
+                departureTime: departureTime,
+                originAirport: originAirport,
+                destinationAirport: destinationAirport,
+                price: flightPrices[i],
+                durationTime: durationTime,
+                logo: logo
+              };
+              console.log("Creating flight object is done");
+              allFlightsData.push(eachFlight);
+              console.log("Pushing data is done");
+
+              console.log(
+                "data is : " +
+                  originCity +
+                  " destination name : " +
+                  destinationCity +
+                  " origin code : " +
+                  originCode +
+                  " destination Code : " +
+                  destinationCode +
+                  " Arrival time is : " +
+                  arivalTime +
+                  " departure time : " +
+                  departureTime +
+                  " Duration : " +
+                  durationTime
+              );
+
+              console.log("Origin name is : " + originCity);
+              counterValue++;
+            }
+          } catch (error) {
+            console.log("Error" + error.message);
+          }
+          console.log("# Debug Conter value : " + counterValue);
+          //console.log("Flight one info is : "+allFlightsData[0].originCity)
+          for (let i = 0; i < flightsLength; i++) {
+            console.log(
+              " Flight " +
+                i +
+                " Info is " +
+                " origin " +
+                allFlightsData[i].originCity +
+                " destination city " +
+                allFlightsData[i].destinationCity +
+                " origin code " +
+                allFlightsData[i].originCode +
+                " destination code " +
+                allFlightsData[i].destinationCode +
+                " Arrival time " +
+                allFlightsData[i].arivalTime +
+                " Departure time : " +
+                allFlightsData[i].departureTime +
+                " origin airport : " +
+                allFlightsData[i].originAirport +
+                " destination airport : " +
+                allFlightsData[i].destinationAirport +
+                " Price : " +
+                allFlightsData[i].price
+            );
+          }
+          this.flightData = allFlightsData;
+          console.log(this.flightData);
+        })
+        .catch(e => {
+          this.errors.push(e);
+        });
+      /*
+      fetch weather data
+      */
+      if (this.goingTo.length) {
+        fetch(
+          "https://weatherapi-com.p.rapidapi.com/current.json?q=" +
+            this.goingTo,
+          {
+            method: "GET",
+            headers: {
+              "x-rapidapi-host": "weatherapi-com.p.rapidapi.com",
+              "x-rapidapi-key":
+                "ceff00788dmshc572d2e939e2aa1p16f562jsn6a57c668e74a"
+            }
+          }
+        )
+          .then(response => response.json())
+          .then(data => {
+            console.log("current temp is : " + data.current.temp_f);
+            console.log("current temp is : " + data.current.temp_c);
+            this.weatherInCelcious = data.current.temp_c;
+            this.weatherInFarenheit = data.current.temp_f;
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      }
     },
     /*
     Fetching airport code from city name
@@ -380,7 +564,6 @@ export default {
   */
     sortUsingPrice: function() {
       this.sortByTime = false;
-      alert("flightDta");
       this.flightData.sort(function(a, b) {
         return a.price - b.price;
       });
@@ -390,17 +573,18 @@ export default {
     method to sort flight using time 
     */
     sortUsingTime: function() {
+      alert("It works");
       this.sortByPrice = false;
-      alert("flightDta");
+      this.sortByTime = true;
       this.flightData.sort(function(a, b) {
         return a.arivalTime.localeCompare(b.arivalTime);
       });
-      this.sortByTime = true;
     }
-  },
+  }
   /*
   fetch data from api
   */
+  /*
   created() {
     let flightURL =
       "https://api.sharetrip.net/api/v1/flight/search?tripType=Return&adult=1&child=0&infant=0&class=Economy&origin=";
@@ -412,16 +596,12 @@ export default {
     flightURL += "&depart=";
     flightURL += this.returningOn;
     console.log(flightURL);
-    //DAC&destination=DXB&depart=2021-12-25&depart=2021-12-30"
-    // `https://api.sharetrip.net/api/v1/flight/search?tripType=Return&adult=1&child=0&infant=0&class=Economy&origin=DAC&destination=DXB&depart=2021-12-25&depart=2021-12-30`
+    
     axios
       .get(flightURL)
       .then(response => {
-        // JSON responses are automatically parsed.
-        //this.posts = response.data;
         response = JSON.stringify(response);
         console.log(response);
-        //const d=response.data.response.flights[0].flight[1].originName;
         response = JSON.parse(response);
         let counterValue = 0;
         let allFlightsData = [];
@@ -441,8 +621,6 @@ export default {
         console.log("Total Flights : " + flightsLength);
         try {
           for (let i = 0; i < flightsLength; i++) {
-            // console.log("It works"+response.data.response.flights[1].flight[i].originName.city );
-            //console.log(typeof(flightsArr[i].flight[i].destinationName.city))
             const originCity =
               response.data.response.flights[i].flight[0].originName.city;
             const originAirport =
@@ -506,7 +684,6 @@ export default {
           console.log("Error" + error.message);
         }
         console.log("# Debug Conter value : " + counterValue);
-        //console.log("Flight one info is : "+allFlightsData[0].originCity)
         for (let i = 0; i < flightsLength; i++) {
           console.log(
             " Flight " +
@@ -539,6 +716,7 @@ export default {
         this.errors.push(e);
       });
   }
+  */
 };
 
 /*
