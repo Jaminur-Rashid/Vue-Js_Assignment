@@ -65,24 +65,6 @@
         </b-card>
         <b-card class="input-card">
           <div>
-            <h6>Returning On</h6>
-            <div>
-              <b-form-datepicker
-                id="example-datepicker1"
-                v-model="returningOn"
-                :date-format-options="{
-                  month: 'short',
-                  year: 'numeric',
-                  day: 'numeric'
-                }"
-                class="mb-2"
-              ></b-form-datepicker>
-            </div>
-            <div class="mt-2" v-if="departuringOn">{{ returningOn }}</div>
-          </div>
-        </b-card>
-        <b-card class="input-card">
-          <div>
             <h6>Departuring On</h6>
             <div>
               <b-form-datepicker
@@ -101,16 +83,30 @@
             <div class="mt-2" v-if="departuringOn">{{ departuringOn }}</div>
           </div>
         </b-card>
+        <b-card class="input-card">
+          <div>
+            <h6>Returning On</h6>
+            <div>
+              <b-form-datepicker
+                id="example-datepicker1"
+                v-model="returningOn"
+                :date-format-options="{
+                  month: 'short',
+                  year: 'numeric',
+                  day: 'numeric'
+                }"
+                class="mb-2"
+              ></b-form-datepicker>
+            </div>
+            <div class="mt-2" v-if="departuringOn">{{ returningOn }}</div>
+          </div>
+        </b-card>
 
         <b-card class="input-card">
           <div>
-            <h6>Going To</h6>
-            <b-form-input
-              class="input-field"
-              v-model="goingTo"
-              placeholder="Kalkata, India"
-            ></b-form-input>
-            <div class="mt-2">{{ goingTo }}</div>
+            <h6>Select Class</h6>
+            <div>
+            </div>
           </div>
         </b-card>
       </b-card-group>
@@ -135,23 +131,24 @@
         <b-row>
           <b-col>
             <b-card class="card-class">
-              <p style="text-align:center">{{ morning }} C</p>
+              <p style="text-align:center">{{ morning }} °C</p>
             </b-card>
           </b-col>
           <b-col>
             <b-card class="card-class">
-              <p style="text-align:center">{{ evening }} C</p>
+              <p style="text-align:center">{{ evening }} °C</p>
             </b-card>
           </b-col>
           <b-col>
             <b-card class="card-class">
-              <p style="text-align:center">{{ afternoon }} C</p>
+              <p style="text-align:center">{{ afternoon }} °C</p>
             </b-card>
           </b-col>
         </b-row>
       </b-container>
 
       <li
+        :key="post.flightPrices"
         style="list-style-type: none;"
         v-for="post of flightData"
         v-if="
@@ -511,12 +508,14 @@ export default {
           .then(response => response.json())
           .then(data => {
             console.log(data);
-            const morningData = Math.ceil((data.list[0].main.temp + data.list[1].main.temp) / 2 - 273.15 );
-            const eveningData = Math.ceil( ((data.list[0].main.temp + data.list[1].main.temp) / 2 - 273.15) *1.8 +32 );
+            const morningData = Math.ceil(
+              (data.list[0].main.temp + data.list[1].main.temp) / 2 - 273.15
+            );
+            //const eveningData = Math.ceil( ((data.list[0].main.temp + data.list[1].main.temp) / 2 - 273.15) *1.8 +32 );
             const afternoonData = Math.ceil(
               (data.list[2].main.temp + data.list[2].main.temp) / 2 - 273.15
             );
-            const Data = Math.ceil(
+            const eveningData = Math.ceil(
               (data.list[4].main.temp + data.list[5].main.temp) / 2 - 273.15
             );
             this.morning = morningData;
@@ -599,7 +598,6 @@ export default {
       });
     }
   }
-  
 };
 
 /*
