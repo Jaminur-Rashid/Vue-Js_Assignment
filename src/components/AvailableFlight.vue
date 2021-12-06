@@ -131,20 +131,26 @@
     </b-nav>
 
     <div class="flight-table">
-      <b-container class="bv-example" v-if="weatherInCelcious && weatherInFarenheit">
+      <b-container class="bv-example" v-if="morning && evening && flightData">
         <b-row>
           <b-col>
-             <b-card class="card-class">
-               <p style="text-align:center">{{weatherInCelcious}} C</p>
-              </b-card>
+            <b-card class="card-class">
+              <p style="text-align:center">{{ morning }} C</p>
+            </b-card>
           </b-col>
           <b-col>
-             <b-card class="card-class">
-               <p style="text-align:center">{{weatherInFarenheit}} C</p>
-              </b-card>
+            <b-card class="card-class">
+              <p style="text-align:center">{{ evening }} C</p>
+            </b-card>
+          </b-col>
+          <b-col>
+            <b-card class="card-class">
+              <p style="text-align:center">{{ afternoon }} C</p>
+            </b-card>
           </b-col>
         </b-row>
       </b-container>
+
       <li
         style="list-style-type: none;"
         v-for="post of flightData"
@@ -157,7 +163,7 @@
         <b-card class="card-class">
           <b-row>
             <b-col style="text-align:center;">
-              <h6>{{ post.departureTime }}</h6>
+              <h6>{{ post.arivalTime }}</h6>
               <p>{{ post.originCode }}</p>
             </b-col>
             <b-col style="text-align:center;">
@@ -170,11 +176,11 @@
               <p>{{ post.durationTime }}</p>
             </b-col>
             <b-col style="text-align:center;">
-              <h6>{{ post.arivalTime }}</h6>
+              <h6>{{ post.departureTime }}</h6>
               <p>{{ post.destinationCity }}</p>
             </b-col>
             <b-col style="text-align:center;">
-              <h6>{{ post.price }}</h6>
+              <h1>{{ post.price }}</h1>
             </b-col>
           </b-row>
         </b-card>
@@ -193,7 +199,7 @@
         <b-card class="card-class">
           <b-row>
             <b-col style="text-align:center;">
-              <h6>{{ post.departureTime }}</h6>
+              <h6>{{ post.arivalTime }}</h6>
               <p>{{ post.originCode }}</p>
             </b-col>
             <b-col style="text-align:center;">
@@ -206,7 +212,7 @@
               <p>{{ post.durationTime }}</p>
             </b-col>
             <b-col style="text-align:center;">
-              <h6>{{ post.arivalTime }}</h6>
+              <h6>{{ post.departureTime }}</h6>
               <p>{{ post.destinationCity }}</p>
             </b-col>
             <b-col style="text-align:center;">
@@ -229,7 +235,7 @@
         <b-card class="card-class">
           <b-row>
             <b-col style="text-align:center;">
-              <h6>{{ post.departureTime }}</h6>
+              <h6>{{ post.arivalTime }}</h6>
               <p>{{ post.originCode }}</p>
             </b-col>
             <b-col style="text-align:center;">
@@ -242,7 +248,7 @@
               <p>{{ post.durationTime }}</p>
             </b-col>
             <b-col style="text-align:center;">
-              <h6>{{ post.arivalTime }}</h6>
+              <h6>{{ post.departureTime }}</h6>
               <p>{{ post.destinationCity }}</p>
             </b-col>
             <b-col style="text-align:center;">
@@ -301,8 +307,9 @@ export default {
       sortByPrice: false,
       posts: [],
       errors: [],
-      weatherInCelcious: "",
-      weatherInFarenheit: "",
+      morning: "",
+      afternoon: "",
+      evening: "",
       items: [
         {
           isActive: true,
@@ -488,14 +495,14 @@ export default {
       /*
       fetch weather data
       */
-      if (this.goingTo.length) {
+      if (this.goingTo.length > 0) {
         fetch(
-          "https://weatherapi-com.p.rapidapi.com/current.json?q=" +
+          "https://community-open-weather-map.p.rapidapi.com/forecast?q=" +
             this.goingTo,
           {
             method: "GET",
             headers: {
-              "x-rapidapi-host": "weatherapi-com.p.rapidapi.com",
+              "x-rapidapi-host": "community-open-weather-map.p.rapidapi.com",
               "x-rapidapi-key":
                 "ceff00788dmshc572d2e939e2aa1p16f562jsn6a57c668e74a"
             }
@@ -503,15 +510,26 @@ export default {
         )
           .then(response => response.json())
           .then(data => {
-            console.log("current temp is : " + data.current.temp_f);
-            console.log("current temp is : " + data.current.temp_c);
-            this.weatherInCelcious = data.current.temp_c;
-            this.weatherInFarenheit = data.current.temp_f;
+            console.log(data);
+            const morningData = Math.ceil((data.list[0].main.temp + data.list[1].main.temp) / 2 - 273.15 );
+            const eveningData = Math.ceil( ((data.list[0].main.temp + data.list[1].main.temp) / 2 - 273.15) *1.8 +32 );
+            const afternoonData = Math.ceil(
+              (data.list[2].main.temp + data.list[2].main.temp) / 2 - 273.15
+            );
+            const Data = Math.ceil(
+              (data.list[4].main.temp + data.list[5].main.temp) / 2 - 273.15
+            );
+            this.morning = morningData;
+            this.evening = eveningData;
+            this.afternoon = afternoonData;
           })
           .catch(err => {
-            console.error(err);
+            console.error(err.message);
           });
       }
+      /*
+     test end
+     */
     },
     /*
     Fetching airport code from city name
@@ -573,7 +591,7 @@ export default {
     method to sort flight using time 
     */
     sortUsingTime: function() {
-      alert("It works");
+      //alert("It works");
       this.sortByPrice = false;
       this.sortByTime = true;
       this.flightData.sort(function(a, b) {
@@ -581,142 +599,7 @@ export default {
       });
     }
   }
-  /*
-  fetch data from api
-  */
-  /*
-  created() {
-    let flightURL =
-      "https://api.sharetrip.net/api/v1/flight/search?tripType=Return&adult=1&child=0&infant=0&class=Economy&origin=";
-    flightURL += this.leavingFrom;
-    flightURL += "&destination=";
-    flightURL += this.goingTo;
-    flightURL += "&depart=";
-    flightURL += this.departuringOn;
-    flightURL += "&depart=";
-    flightURL += this.returningOn;
-    console.log(flightURL);
-    
-    axios
-      .get(flightURL)
-      .then(response => {
-        response = JSON.stringify(response);
-        console.log(response);
-        response = JSON.parse(response);
-        let counterValue = 0;
-        let allFlightsData = [];
-        let flightPrices = [
-          9876,
-          2342,
-          1947,
-          10000,
-          45000,
-          5000,
-          3333,
-          7654,
-          12345,
-          6567
-        ];
-        const flightsLength = response.data.response.flights.length;
-        console.log("Total Flights : " + flightsLength);
-        try {
-          for (let i = 0; i < flightsLength; i++) {
-            const originCity =
-              response.data.response.flights[i].flight[0].originName.city;
-            const originAirport =
-              response.data.response.flights[i].flight[0].originName.airport;
-            const destinationCity =
-              response.data.response.flights[i].flight[0].destinationName.city;
-            const originCode =
-              response.data.response.flights[i].flight[0].originName.code;
-            const destinationAirport =
-              response.data.response.flights[i].flight[0].destinationName
-                .airport;
-            const destinationCode =
-              response.data.response.flights[i].flight[0].destinationName.code;
-            const arivalTime =
-              response.data.response.flights[i].flight[0].arrivalDateTime.time;
-            const departureTime =
-              response.data.response.flights[i].flight[0].departureDateTime
-                .time;
-            const durationTime =
-              response.data.response.flights[i].flight[0].duration;
-            const logo = response.data.response.flights[i].flight[0].logo;
-            console.log("data slicing done");
-            const eachFlight = {
-              originCity: originCity,
-              destinationCity: destinationCity,
-              originCode: originCode,
-              destinationCode: destinationCode,
-              arivalTime: arivalTime,
-              departureTime: departureTime,
-              originAirport: originAirport,
-              destinationAirport: destinationAirport,
-              price: flightPrices[i],
-              durationTime: durationTime,
-              logo: logo
-            };
-            console.log("Creating flight object is done");
-            allFlightsData.push(eachFlight);
-            console.log("Pushing data is done");
-
-            console.log(
-              "data is : " +
-                originCity +
-                " destination name : " +
-                destinationCity +
-                " origin code : " +
-                originCode +
-                " destination Code : " +
-                destinationCode +
-                " Arrival time is : " +
-                arivalTime +
-                " departure time : " +
-                departureTime +
-                " Duration : " +
-                durationTime
-            );
-
-            console.log("Origin name is : " + originCity);
-            counterValue++;
-          }
-        } catch (error) {
-          console.log("Error" + error.message);
-        }
-        console.log("# Debug Conter value : " + counterValue);
-        for (let i = 0; i < flightsLength; i++) {
-          console.log(
-            " Flight " +
-              i +
-              " Info is " +
-              " origin " +
-              allFlightsData[i].originCity +
-              " destination city " +
-              allFlightsData[i].destinationCity +
-              " origin code " +
-              allFlightsData[i].originCode +
-              " destination code " +
-              allFlightsData[i].destinationCode +
-              " Arrival time " +
-              allFlightsData[i].arivalTime +
-              " Departure time : " +
-              allFlightsData[i].departureTime +
-              " origin airport : " +
-              allFlightsData[i].originAirport +
-              " destination airport : " +
-              allFlightsData[i].destinationAirport +
-              " Price : " +
-              allFlightsData[i].price
-          );
-        }
-        this.flightData = allFlightsData;
-        console.log(this.flightData);
-      })
-      .catch(e => {
-        this.errors.push(e);
-      });
-  }
-  */
+  
 };
 
 /*
